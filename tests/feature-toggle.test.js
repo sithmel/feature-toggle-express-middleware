@@ -12,6 +12,7 @@ const createReq = (query = {}, currentToggles = []) => ({
 const createRes = () => ({
   locals: {},
   cookie: sinon.spy(),
+  header: sinon.spy(),
 });
 
 describe('featureToggle', () => {

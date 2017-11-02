@@ -52,6 +52,13 @@ module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptio
     arrayToggles.sort();
 
     res.cookie(cookieName, arrayToggles.join(','), cookieOptions);
+
+    if (arrayToggles.length) {
+      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+      res.header('Expires', '-1');
+      res.header('Pragma', 'no-cache');
+    }
+
     next();
   };
 }
