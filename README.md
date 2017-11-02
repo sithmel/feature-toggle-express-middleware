@@ -1,7 +1,7 @@
 feature-toggle-express-middleware
 =================================
 This middleware manages feature toggles. You can switch on/off features using a query parameter. It stores them in a cookie.
-```
+```js
 const featureToggle = require('feature-toggle-express-middleware');
 
 // pass a list of allowed features and a prefix representing your application
