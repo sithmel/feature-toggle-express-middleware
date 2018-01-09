@@ -51,7 +51,11 @@ module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptio
     const arrayToggles = Array.from(toggles);
     arrayToggles.sort();
 
-    res.cookie(cookieName, arrayToggles.join(','), cookieOptions);
+    if (arrayToggles.length) {
+      res.cookie(cookieName, arrayToggles.join(','), cookieOptions);
+    } else {
+      res.clearCookie(cookieName, cookieOptions);
+    }
 
     if (arrayToggles.length) {
       res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
