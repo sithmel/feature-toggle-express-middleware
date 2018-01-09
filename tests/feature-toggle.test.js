@@ -12,6 +12,7 @@ const createReq = (query = {}, currentToggles = []) => ({
 const createRes = () => ({
   locals: {},
   cookie: sinon.spy(),
+  clearCookie: sinon.spy(),
   header: sinon.spy(),
 });
 
@@ -31,8 +32,8 @@ describe('featureToggle', () => {
     const res = createRes();
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('xyz'));
-      assert.equal(res.cookie.callCount, 1);
-      assert(res.cookie.calledWith('myapp-feature-toggles', ''));
+      assert.equal(res.clearCookie.callCount, 1);
+      assert(res.clearCookie.calledWith('myapp-feature-toggles'));
       done();
     });
   })
@@ -54,8 +55,8 @@ describe('featureToggle', () => {
     const res = createRes();
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('feature3'));
-      assert.equal(res.cookie.callCount, 1);
-      assert(res.cookie.calledWith('myapp-feature-toggles', ''));
+      assert.equal(res.clearCookie.callCount, 1);
+      assert(res.clearCookie.calledWith('myapp-feature-toggles'));
       done();
     });
   })
@@ -102,8 +103,8 @@ describe('featureToggle', () => {
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('feature1'));
       assert.isFalse(res.locals.hasToggle('feature2'));
-      assert.equal(res.cookie.callCount, 1);
-      assert(res.cookie.calledWith('myapp-feature-toggles', ''));
+      assert.equal(res.clearCookie.callCount, 1);
+      assert(res.clearCookie.calledWith('myapp-feature-toggles'));
       done();
     });
   })
