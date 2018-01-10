@@ -19,6 +19,7 @@ featureToggle takes this arguments:
 * an array with allowed toggles (a toggle is a string)
 * a prefix that is used for the cookie and the query parameters
 * [optional] the options for the cookie (see expressjs documentation)
+* [optional] a boolean that when true, disable automatic cache control headers
 
 Using the middleware
 ====================
