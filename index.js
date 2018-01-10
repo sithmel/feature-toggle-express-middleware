@@ -26,7 +26,7 @@ function difference(setA, setB) {
   return differenceSet;
 }
 
-module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptions) {
+module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptions, manualCacheControl) {
   const cookieName = `${prefix}-feature-toggles`;
   const addTogglesAttr = `${prefix}AddToggles`;
   const removeTogglesAttr = `${prefix}RemoveToggles`;
@@ -39,6 +39,7 @@ module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptio
     const removeToggles = getSet(req.query[removeTogglesAttr]);
     const resetToggles = req.query[resetTogglesAttr];
     const currentToggles = getSet(req.cookies[cookieName]);
+    const isChanged = addToggles.size || removeToggles.size || resetToggles;
 
     const toggles = resetToggles ? new Set() : intersection(
       union(
@@ -51,16 +52,20 @@ module.exports = function featureToggle(allowedTogglesArray, prefix, cookieOptio
     const arrayToggles = Array.from(toggles);
     arrayToggles.sort();
 
-    if (arrayToggles.length) {
-      res.cookie(cookieName, arrayToggles.join(','), cookieOptions);
-    } else {
-      res.clearCookie(cookieName, cookieOptions);
+    if (isChanged) {
+      if (arrayToggles.length) {
+        res.cookie(cookieName, arrayToggles.join(','), cookieOptions);
+      } else {
+        res.clearCookie(cookieName, cookieOptions);
+      }
     }
 
-    if (arrayToggles.length) {
-      res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-      res.header('Expires', '-1');
-      res.header('Pragma', 'no-cache');
+    if (!manualCacheControl) {
+      if (isChanged || arrayToggles.length) {
+        res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+        res.header('Expires', '-1');
+        res.header('Pragma', 'no-cache');
+      }
     }
 
     next();

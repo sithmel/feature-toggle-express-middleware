@@ -32,8 +32,7 @@ describe('featureToggle', () => {
     const res = createRes();
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('xyz'));
-      assert.equal(res.clearCookie.callCount, 1);
-      assert(res.clearCookie.calledWith('myapp-feature-toggles'));
+      assert.equal(res.clearCookie.callCount, 0);
       done();
     });
   })
@@ -44,8 +43,7 @@ describe('featureToggle', () => {
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('xyz'));
       assert.isTrue(res.locals.hasToggle('feature1'));
-      assert.equal(res.cookie.callCount, 1);
-      assert(res.cookie.calledWith('myapp-feature-toggles', 'feature1'));
+      assert.equal(res.cookie.callCount, 0);
       done();
     });
   })
@@ -55,8 +53,7 @@ describe('featureToggle', () => {
     const res = createRes();
     middleware(req, res, () => {
       assert.isFalse(res.locals.hasToggle('feature3'));
-      assert.equal(res.clearCookie.callCount, 1);
-      assert(res.clearCookie.calledWith('myapp-feature-toggles'));
+      assert.equal(res.clearCookie.callCount, 0);
       done();
     });
   })
